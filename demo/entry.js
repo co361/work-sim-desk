@@ -8,7 +8,7 @@
     document.title='WORK SIM · 책상 근무 1일차';
     $('homeCode').hidden=true;$('homeGo').hidden=true;
     const sel=$('homeTeam');for(const o of [...sel.options])if(o.value!=='cs')o.remove();sel.value='cs';
-    const title=$('home').querySelector('h1');const subtitle=title.querySelector('.ws-entry-subtitle');if(subtitle)subtitle.textContent='책상에서 시작하는 첫 출근';else title.textContent='WORK SIM · 책상 근무 1일차';
+    const title=$('home').querySelector('h1');const subtitle=title.querySelector('.ws-entry-subtitle');if(subtitle)subtitle.textContent='책상에서 시작하는 업무 실습';else title.textContent='WORK SIM · 책상 근무 1일차';
     $('home').querySelector('.sub').textContent='1인칭 책상에서 전화와 메일로 진행하는 고객상담팀 1일차 · 약 1시간';
     $('homeBackend').textContent='이 브라우저에서 이어 하기 · 업무 기록과 결과 PDF 저장';
     const saved=!!read().cs;$('homeDemo').textContent=saved?'1일차 이어 하기':'1일차 시작';$('homeDemo').classList.add('pri');
@@ -17,7 +17,7 @@
   window.showHome=async function(){await originalHome();labels();};
   $('homeTeam').onchange=()=>{S.code=null;P=null;renderHomeDays();labels();};
   $('homeDemo').onclick=async()=>{
-    const b=$('homeDemo');if(b.disabled)return;b.disabled=true;homeMsg('첫 출근을 준비하고 있어요…');
+    const b=$('homeDemo');if(b.disabled)return;b.disabled=true;homeMsg('업무를 준비하고 있어요…');
     try{
       await window.__backendReady;const guests=read();let code=guests.cs;
       if(code){const r=await Backend.check(code);if(!r.ok)code=null;}

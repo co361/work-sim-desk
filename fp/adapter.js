@@ -42,7 +42,81 @@
   const targets=['top','talk','toasts','card','dialog','phoneBar','endNotice','side','debrief'];for(const id of targets){const el=document.getElementById(id);if(el){new MutationObserver(()=>translate(el)).observe(el,{childList:true,subtree:true,characterData:true});translate(el);}}
   document.getElementById('pcOff').textContent='책상으로';document.querySelector('.tb-esc').textContent='ESC 로 책상';document.getElementById('pcBtn').title='컴퓨터 열기';
   const avatar=document.getElementById('homeAvF');if(avatar?.parentElement)avatar.parentElement.hidden=true;
-  const homeTitle=document.getElementById('home').querySelector('h1'),homeSubtitle=homeTitle.querySelector('.ws-entry-subtitle');if(homeSubtitle)homeSubtitle.textContent='책상에서 시작하는 첫 출근';
+  const homeTitle=document.getElementById('home').querySelector('h1'),homeSubtitle=homeTitle.querySelector('.ws-entry-subtitle');if(homeSubtitle)homeSubtitle.textContent='책상에서 시작하는 업무 실습';
   window.FPDesk={openComputer,openPhone,closePhone:()=>dialog.close(),contacts,language,status:()=>({dialing,phoneOpen:dialog.open,computerOpen:Desk.isOpen(),phase:S.phase,namespace:'ws7-day1-first-person-v1:'})};
   setInterval(()=>{const pending=window.Talk&&Talk.anyPending();phone.classList.toggle('pending',!!pending);phone.textContent=pending?'전화 · 새 안내':'전화';phone.disabled=!active()||blocked();context.hidden=!Talk.isOpen();if(!context.hidden)context.textContent='전화 연결 · '+(Talk.state().sess?.name||Talk.state().showing?.who||'통화 중');if(dialog.open){const sig=bookSignature();if(sig!==lastContacts){lastContacts=sig;renderBook();}}if(!active()&&dialog.open)dialog.close();},350);
+})();
+
+/* Local, unsubmitted form recovery. Never changes card progress or grading. */
+(function(){
+  const storageKey='fp.compose.drafts.v1';
+  let cache=null,timer=null,discarding=false;
+  const owner=()=>S.code?JSON.stringify([S.code,S.team,S.ep]):null;
+  function state(){
+    const id=owner();if(!id)return null;
+    if(!cache||cache.owner!==id){
+      let saved;try{saved=JSON.parse(localStorage.getItem(storageKey)||'null');}catch{}
+      cache=saved&&saved.owner===id&&saved.items&&typeof saved.items==='object'?saved:{owner:id,items:{}};
+    }
+    return cache;
+  }
+  const key=cp=>JSON.stringify([cp.id,cp.which||'reply',cp.key||'reply']);
+  function flush(){clearTimeout(timer);timer=null;if(cache)try{localStorage.setItem(storageKey,JSON.stringify(cache));}catch{}}
+  function capture(){
+    if(discarding||!S.composing)return;
+    const s=state(),cp=S.composing;if(!s)return;
+    s.items[key(cp)]={text:$('composeText').value,answer:$('cpWorkIn').value};
+    clearTimeout(timer);timer=setTimeout(flush,200);
+  }
+  function forget(cp){const s=state();if(s){delete s.items[key(cp)];flush();}}
+  for(const id of['composeText','cpWorkIn'])$(id).addEventListener('input',capture);
+  const open=openComposer,close=closeComposer,send=sendCompose;
+  window.openComposer=openComposer=function(id,which,action){
+    const result=open(id,which,action),cp=S.composing,s=state(),d=cp&&s&&s.items[key(cp)],st=S.cards[id];
+    if(d&&st?.status!=='done'&&!st?.steps?.[cp.which]){
+      $('composeText').value=String(d.text||'');$('cpWorkIn').value=String(d.answer||'');
+      $('composeText').dispatchEvent(new Event('input',{bubbles:true}));
+    }
+    return result;
+  };
+  window.closeComposer=closeComposer=function(){capture();flush();return close();};
+  window.sendCompose=sendCompose=async function(id,text,which,action,answer){
+    const cp={id,which:which||'reply',key:action||'reply'};
+    try{return await send(id,text,which,action,answer);}
+    finally{const st=S.cards[id];if(st?.status==='done'||st?.steps?.[cp.which])forget(cp);}
+  };
+  const cancel=$('composeCancel').onclick;
+  $('composeCancel').onclick=function(event){
+    const cp=S.composing;discarding=true;
+    try{if(cp)forget(cp);return cancel.call(this,event);}finally{discarding=false;}
+  };
+  addEventListener('pagehide',()=>{capture();flush();});
+})();
+
+/* Variant presentation text only. Canonical scoring and stored answers stay intact. */
+(function(){
+  const wording=text=>String(text).replace(/첫\s*출근/g,'업무 시작');
+  function presentation(value){
+    if(typeof value==='string')return wording(value);
+    if(Array.isArray(value))return value.map(presentation);
+    if(value&&typeof value==='object')return Object.fromEntries(Object.entries(value).map(([k,v])=>[k,presentation(v)]));
+    return value;
+  }
+  const original=loadStory;
+  window.loadStory=loadStory=async function(team,day){
+    const story=presentation(await original(team,day));
+    if(window.STORY)window.STORY[team+'-ep'+day]=story;
+    return story;
+  };
+  function clean(node){
+    if(node.nodeType===Node.TEXT_NODE){
+      if(node.parentElement?.closest('textarea,input,script,style'))return;
+      const next=wording(node.nodeValue);if(next!==node.nodeValue)node.nodeValue=next;
+    }else if(node.nodeType===Node.ELEMENT_NODE){
+      if(node.matches('textarea,input,script,style'))return;
+      const walker=document.createTreeWalker(node,NodeFilter.SHOW_TEXT);let text;while((text=walker.nextNode()))clean(text);
+    }
+  }
+  new MutationObserver(records=>{for(const record of records){if(record.type==='characterData')clean(record.target);else for(const node of record.addedNodes)clean(node);}}).observe(document.body,{subtree:true,childList:true,characterData:true});
+  clean(document.body);
 })();

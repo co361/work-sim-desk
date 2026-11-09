@@ -21,7 +21,7 @@ var ResultPdf = (function () {
   var GAME = 'WORKSIM', ORG = '에듀메이커스';
   var BRAND_SVG = 'assets/brand/worksim-logo-45436337f281.png', BRAND_PNG = 'assets/brand/worksim-logo-45436337f281.png', logoData = null, logoP = null;
   var TEAM_NAME = { cs: '고객상담팀', logi: '물류팀', acct: '회계팀', ga: '총무팀', rec: '채용팀', plan: '경영기획팀', qc: '품질관리팀', pr: '홍보팀', edu: '교육팀', buy: '구매팀' };
-  var DAY_TITLE = { 1: '첫 출근', 2: '사규집', 3: '숫자', 4: '옆 팀', 5: '거절', 6: '위기', 7: '결정' };
+  var DAY_TITLE = { 1: '업무 시작', 2: '사규집', 3: '숫자', 4: '옆 팀', 5: '거절', 6: '위기', 7: '결정' };
   var ACT_DEFAULT = { reply: '회신', hold: '보류', delegate: '전달', confirm: '상신', reject: '거절', approve: '승인', deliver: '직접 전달', ask: '직접 질문', report: '보고', visit: '응대', work: '검산', none: '처리 못 함', timeout: '무응답', pick: '선택' };
 
   /* 글꼴에 없는 기호 — 뜻이 있는 것은 글로 바꾼다(PDF·인쇄 같은 글). 그 밖에 글꼴에 없는 글자(이모지 등)는 PDF 그릴 때만 뺀다 */

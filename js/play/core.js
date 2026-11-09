@@ -28,7 +28,7 @@ const TEAM_ORDER=['cs','logi','acct','ga','rec','plan','qc','pr','edu','buy'];
 const ORG={cs:{lead:'김민아 팀장',senior:'박선임',chief:'이주임'},logi:{lead:'강태호 팀장',senior:'오대리',chief:'장주임'},acct:{lead:'서지현 팀장',senior:'한주임',chief:'문주임'},ga:{lead:'이재훈 팀장',senior:'최주임',chief:'권주임'},rec:{lead:'노윤아 팀장',senior:'김선임',chief:'홍주임'},plan:{lead:'조성민 팀장',senior:'류선임',chief:'신주임',more:['감주임']},qc:{lead:'배정훈 팀장',senior:'남선임',chief:'도주임',more:['조반장']},pr:{lead:'황서연 팀장',senior:'진선임',chief:'표주임'},edu:{lead:'문경수 팀장',senior:'손선임',chief:'반주임'},buy:{lead:'양지훈 팀장',senior:'구선임',chief:'엄주임',more:['유대리']}};
 const UNLOCK_LABEL={rulebook:'사규집',approval:'결재 검토',orgchart:'조직도',report:'대면 보고',decide:'결정'};
 const UNLOCK_DAY={rulebook:2,approval:3,orgchart:4,report:5,decide:7};
-const DAY_TITLES={1:'첫 출근',2:'사규집',3:'숫자',4:'옆 팀',5:'거절',6:'위기',7:'결정'};
+const DAY_TITLES={1:'업무 시작',2:'사규집',3:'숫자',4:'옆 팀',5:'거절',6:'위기',7:'결정'};
 const SPEED=Math.max(0.1,+(Q.get('speed')||1));
 /* 게임 1분 = 실시간 80초/speed → 하루 30분이 실시간 40분이다(소개 페이지 「하루 40분씩」과 같다).
    38차 12초(=6분) → 22초(=11분) → 45차 80초. 대표 「하루 플레이타임을 늘리는게 좋을 것 같아」 —
