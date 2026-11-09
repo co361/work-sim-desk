@@ -1,0 +1,17 @@
+/* The established white/grey/navy product palette remains in use. */
+#seatBtn,#pcHint,#pmAvatar,#homeAvF,#homeAvM,#avatar,#tkFace,.rsFace,.msgFace,.msg-face,.tkFace{display:none!important}
+#stage{background:#e9edf0}
+#phoneBook{width:min(620px,calc(100vw - 32px));max-height:min(78dvh,780px);padding:0;border:1px solid var(--line2);border-radius:14px;color:var(--ink);background:#fff;box-shadow:0 20px 70px #1b243030}
+#phoneBook::backdrop{background:#1b24304d}
+#phoneBook header{display:flex;align-items:center;gap:16px;padding:20px 22px 12px}#phoneBook h2{font-size:20px;margin:0}#phoneBook header button{margin-left:auto}
+#phoneBook .fp-sub{padding:0 22px 14px;margin:0;color:var(--mute);line-height:1.6}
+.fp-filters{display:grid;grid-template-columns:1fr 150px;gap:10px;padding:0 22px 16px}
+.fp-filters input,.fp-filters select{min-width:0;padding:10px 12px;border:1px solid var(--line2);border-radius:8px;background:#fff;color:var(--ink)}
+#fp-contacts{overflow:auto;max-height:45dvh;padding:0 14px 12px}.fp-contact{display:grid;grid-template-columns:1fr auto;align-items:center;gap:14px;padding:12px 9px;border-top:1px solid var(--line)}.fp-contact b{display:block;font-size:14px}.fp-contact small{display:block;color:var(--mute);margin-top:3px}.fp-contact button{min-width:66px}
+#fp-incoming:not(:empty){padding:0 22px 14px}.fp-ring-row{display:flex;gap:12px;align-items:center;padding:10px 0}.fp-ring-row span{flex:1}
+#phoneBook footer{display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);padding:14px 22px;background:var(--page)}#phoneBook footer .muted{margin:0;flex:1}
+#fp-phone-btn{padding:6px 12px;border:1px solid var(--line2);border-radius:999px;background:#fff;white-space:nowrap}#fp-phone-btn.pending{border-color:var(--acc);color:var(--acc);font-weight:700}
+#fp-call-context{position:fixed;z-index:23;top:64px;left:50%;transform:translateX(-50%);padding:8px 16px;border:1px solid var(--acc-line);border-radius:999px;color:var(--acc-d);background:#fff;font-size:13px;box-shadow:0 3px 12px #1b243010}#fp-call-context[hidden]{display:none}
+#talk .tkWho small:before{content:'전화 · '}
+#phoneBook button:focus-visible,#fp-phone-btn:focus-visible{outline:3px solid var(--acc);outline-offset:3px}
+@media(max-width:680px){#unlocks,#cnt,#saveStat{display:none}#top{gap:7px;padding:0 8px}#top .ttl{font-size:12px}#title small{display:none}.fp-filters{grid-template-columns:1fr}.fp-contact{padding:12px 4px}#fp-call-context{max-width:90vw;white-space:nowrap;font-size:12px}}

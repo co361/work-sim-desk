@@ -1,0 +1,21 @@
+import * as T from 'three';
+try{
+const scene=new T.Scene();scene.background=new T.Color('#e9edf0');scene.fog=new T.Fog('#e9edf0',7,16);
+const camera=new T.PerspectiveCamera(47,innerWidth/innerHeight,.05,30);camera.position.set(0,1.38,2.25);camera.lookAt(0,.95,-.45);
+const renderer=new T.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=T.SRGBColorSpace;renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;document.body.prepend(renderer.domElement);
+const mat=(c,r=.85)=>new T.MeshStandardMaterial({color:c,roughness:r});const wood=mat('#bf9e7b'),ink=mat('#253347'),wall=mat('#e3e7e6'),paper=mat('#f7f6f0'),steel=mat('#a5adb3'),keymat=mat('#e2e5e6');
+function box(w,h,d,x,y,z,m){const a=new T.Mesh(new T.BoxGeometry(w,h,d),m);a.position.set(x,y,z);a.castShadow=true;a.receiveShadow=true;scene.add(a);return a;}
+box(2.75,.09,1.35,0,.75,0,wood);box(.09,.76,1.15,-1.22,.35,0,steel);box(.09,.76,1.15,1.22,.35,0,steel);
+box(12,.06,12,0,-.04,-2,mat('#cdd4d2'));box(12,4,.1,0,1.95,-4,wall);box(.1,4,12,-4,1.95,-2,wall);
+box(3.6,1.65,.035,-1.75,2,-3.91,mat('#b3cbd4'));for(const x of[-3.52,-1.75,.02])box(.035,1.72,.05,x,2,-3.86,paper);box(3.65,.04,.08,-1.75,2,-3.84,paper);
+for(const x of[-3.2,-2.6,-2,-1.4,-.8])box(.22,.35+Math.sin(x)*.1,.02,x,.4,-3.88,mat('#8caaa4'));
+box(1.1,.72,.055,-.2,1.22,-.35,ink);box(1.01,.61,.008,-.2,1.24,-.315,mat('#233f60',.8));box(.075,.22,.065,-.2,.86,-.35,steel);box(.42,.018,.24,-.2,.805,-.33,steel);
+const canvas=document.createElement('canvas');canvas.width=720;canvas.height=430;const ctx=canvas.getContext('2d');ctx.fillStyle='#edf2f8';ctx.fillRect(0,0,720,430);ctx.fillStyle='#1f4e8c';ctx.fillRect(0,0,720,64);ctx.fillStyle='#fff';ctx.font='600 25px sans-serif';ctx.fillText('WORK SIM',32,43);ctx.fillStyle='#34465c';ctx.font='28px sans-serif';ctx.fillText('내 컴퓨터',36,135);ctx.font='19px sans-serif';ctx.fillStyle='#66788c';ctx.fillText('메일 · 메신저 · 업무 노트',36,184);for(let i=0;i<3;i++){ctx.fillStyle='#fff';ctx.fillRect(36,227+i*49,648,35);}const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;box(1.01,.61,.002,-.2,1.24,-.307,new T.MeshBasicMaterial({map:texture}));
+box(.78,.025,.27,-.18,.815,.29,keymat);for(let r=0;r<4;r++)for(let c=0;c<12;c++)box(.047,.009,.039,-.51+c*.06,.832,.195+r*.057,mat('#f6f6f3'));
+const mouse=new T.Mesh(new T.SphereGeometry(.055,16,12),paper);mouse.scale.set(1,.45,1.55);mouse.position.set(.4,.83,.28);scene.add(mouse);
+const phone=new T.Group();phone.position.set(.91,.81,.02);phone.rotation.y=-.25;scene.add(phone);const pb=new T.Mesh(new T.BoxGeometry(.36,.06,.43),ink);pb.position.y=.035;phone.add(pb);for(const x of[-.145,.145]){const a=new T.Mesh(new T.CapsuleGeometry(.041,.23,4,12),ink);a.rotation.x=Math.PI/2;a.position.set(x,.12,-.04);phone.add(a);}const receiver=new T.Mesh(new T.CapsuleGeometry(.043,.23,4,12),ink);receiver.rotation.z=Math.PI/2;receiver.position.set(0,.135,-.16);phone.add(receiver);for(let r=0;r<4;r++)for(let c=0;c<3;c++){const k=new T.Mesh(new T.BoxGeometry(.035,.008,.032),steel);k.position.set(-.055+c*.055,.07,.005+r*.048);phone.add(k);}
+box(.32,.02,.38,-1.02,.817,.12,paper);box(.025,.018,.28,-.98,.837,.12,ink);const mug=new T.Mesh(new T.CylinderGeometry(.065,.055,.15,24),mat('#f5f3e9'));mug.position.set(-.94,.87,-.35);scene.add(mug);
+scene.add(new T.HemisphereLight(0xf6faff,0x718075,2.4));const sun=new T.DirectionalLight(0xfff5e5,3.1);sun.position.set(-2.5,5,2);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);scene.add(sun);
+function render(){renderer.setSize(innerWidth,innerHeight);camera.aspect=innerWidth/innerHeight;camera.position.z=2.25+Math.max(0,(1.52-camera.aspect)*1.7);camera.lookAt(0,.95,-.45);camera.updateProjectionMatrix();renderer.render(scene,camera);for(const[id,p]of[['desk-computer',new T.Vector3(-.2,1.1,-.25)],['desk-phone',new T.Vector3(.91,.84,.08)]]){p.project(camera);const e=document.getElementById(id);e.style.left=(p.x+1)*innerWidth/2+'px';e.style.top=(1-p.y)*innerHeight/2+'px';}}
+addEventListener('resize',render);render();window.FPScene={scene,camera,renderer,characterCount:0,render};__office.sceneReady(true);
+}catch(e){console.warn('책상 3D 대신 기본 책상 조작을 사용합니다:',e.message);__office.sceneReady(false);}
